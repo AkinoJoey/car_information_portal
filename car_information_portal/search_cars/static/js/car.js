@@ -1,67 +1,38 @@
 // static/js/car.js
 
-// document.addEventListener('DOMContentLoaded', function () {
-//     const makerDropdown = document.getElementById('makerDropdown');
-//     const modelDropdown = document.getElementById('modelDropdown');
+document.addEventListener("DOMContentLoaded", function () {
+    const makerDropdown = document.getElementById("make");
+    const modelDropdown = document.getElementById("model");
 
-//     makerDropdown.addEventListener('change', function () {
-//         const makeId = makerDropdown.value;
-//         if (makeId) {
-//             fetchModels(makeId);
-//         } else {
-//             clearModels();
-//         }
-//     });
-
-//     function fetchModels(makeId) {
-//         const url = `models/?make_id=${makeId}`;
-//         fetch(url)
-//             .then(response => response.json())
-//             .then(data => {
-//                 clearModels();
-//                 data.models.forEach(model => {
-//                     const option = document.createElement('option');
-//                     option.value = model.model_name;
-//                     option.textContent = model.model_name;
-//                     modelDropdown.appendChild(option);
-//                 });
-//             });
-//     }
-
-//     function clearModels() {
-//         modelDropdown.innerHTML = '<option value="">Select Model</option>';
-//     }
-// });
-
-document.addEventListener('DOMContentLoaded', function () {
-    const makerDropdown = document.getElementById('id_maker');
-    const modelDropdown = document.getElementById('id_model');
-
-    makerDropdown.addEventListener('change', function () {
+    makerDropdown.addEventListener("change", function () {
         const makeId = makerDropdown.value;
-        if (makeId) {
-            fetchModels(makeId);
-        } else {
-            clearModels();
-        }
-    });
+        console.log(makeId);
+        fetchModels(makeId);
+    })
 
     function fetchModels(makeId) {
-        const url = `form/?maker=${makeId}`;
-        fetch(url)
+        fetch('/get-car-models', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({makeId:makeId}),
+        })
             .then(response => response.json())
             .then(data => {
                 clearModels();
-                data.models.forEach(model => {
+                data.forEach(data => {
                     const option = document.createElement('option');
-                    option.value = model[0];
-                    option.textContent = model[1];
+                    option.value = data.model_name;
+                    option.textContent = data.model_name;
                     modelDropdown.appendChild(option);
                 });
-            });
+            })
     }
 
     function clearModels() {
-        modelDropdown.innerHTML = '<option value="">Select Model</option>';
+        modelDropdown.innerHTML = '<option value="">-- Select Model --</option>';
     }
-});
+})
+
+

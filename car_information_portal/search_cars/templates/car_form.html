@@ -1,8 +1,16 @@
+{% extends 'base.html' %}
 {% load static %}
-<form id="carForm" method="GET" action="{% url 'car_form' %}">
+
+{% block content %}
+<script src="{% static 'js/car.js' %}"></script>
+<form method="post">
     {% csrf_token %}
-    {{ form.as_p }}
+    {{ form.make }}
+    <select id="model", name="model">
+        <option label="-- Select Model --"></option>
+    </select>
+    {{ form.begin_year}}
+    {{ form.end_year}}
     <button type="submit">Submit</button>
 </form>
-
-<script src="{% static 'js/car.js' %}"></script>
+{% endblock %}

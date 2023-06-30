@@ -1,6 +1,12 @@
 {
     "cSpell.words": [
         "carquery",
+        "corsheaders",
+        "makeid",
         "XMLHTTP"
-    ]
+    ],
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.autopep8"
+    },
+    "python.formatting.provider": "none"
 }
