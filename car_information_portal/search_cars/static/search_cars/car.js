@@ -1,5 +1,3 @@
-// static/js/car.js
-
 document.addEventListener("DOMContentLoaded", function () {
     const makerDropdown = document.getElementById("make");
     const modelDropdown = document.getElementById("model");

@@ -12,7 +12,10 @@ def get_car_makes():
     headers = {'User-Agent': 'Chrome/114.0'}
     response = requests.get('https://www.carqueryapi.com/api/0.3/?&cmd=getMakes',headers=headers)
     makes = response.json()['Makes']
-    choices = [(make['make_id'], make['make_display']) for make in makes]
+    choices = []
+    for make in makes:
+        if make['make_country'] == 'Germany':
+            choices.append((make['make_id'],make['make_display']))
     return choices
 
 def create_car_models(makeId):

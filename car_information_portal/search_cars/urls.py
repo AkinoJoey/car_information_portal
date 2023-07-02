@@ -7,5 +7,4 @@ urlpatterns = [
     path('testing/', views.testing, name="testing"),
     path('car_form/',views.car_form, name="car_form"),
     path('get-car-models',views.get_car_models, name='get-car-models'),
-    path('your_backend_view',views.your_backend_view, name='your_backend_view')
 ]
