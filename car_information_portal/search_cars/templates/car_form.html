@@ -1,19 +1,14 @@
 {% extends 'base.html' %}
-{% load static %}
 
-{% block content %}
-<script src="{% static 'search_cars/car.js' %}"></script>
-<header class="container">
-    <strong>GERMAN CAR WAREHOUSE</strong>
-    <form method="post">
-        {{ form.make }}
-        <select id="model" , name="model">
-            <option label="-- Select Model --"></option>
-        </select>
-        {{ form.begin_year}}
-        {{ form.end_year}}
-        <button type="submit">Submit</button>
-    </form>
-</header>
-
-{% endblock %}
+{% block header %}
+<form method="post">
+    {{ form.make }}
+    <select id="model" , name="model">
+        <option label="-- Select Model --"></option>
+    </select>
+    {{ form.begin_year}}
+    {{ form.end_year}}
+    <button type="submit">Submit</button>
+</form>
+{% endblock%}
+    

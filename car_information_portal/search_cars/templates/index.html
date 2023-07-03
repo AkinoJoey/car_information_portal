@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block header %}
+{% include 'car_form.html' %}
+{% endblock %}
+
+
+{% block content %}
+<ul>
+    {% for make in makes %}
+
+    <li>{{ make.make_display }}</li>
+
+    {% endfor %}
+</ul>
+{% endblock%}
