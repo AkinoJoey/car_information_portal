@@ -32,7 +32,7 @@ def create_car_models(makeId):
     return models
 
 class CarForm(forms.Form):
-    make = forms.ChoiceField(choices=get_car_makes(),initial=get_car_makes()[0][0],widget=forms.Select(attrs={"id": "make"}))
+    make = forms.ChoiceField(choices=get_car_makes(),initial=get_car_makes()[0][0],widget=forms.Select(attrs={"id": "make","class": "mt-2 mt-sm-0 mx-sm-1 text-center"}))
     current_year = date.today().year
-    begin_year = forms.ChoiceField(choices=create_year(),initial=current_year)
-    end_year = forms.ChoiceField(choices=create_year(),initial=current_year)
+    begin_year = forms.ChoiceField(choices=create_year(),initial=current_year,widget=forms.Select(attrs={"class": "mt-2 mt-sm-0 mx-sm-1 text-center"}))
+    end_year = forms.ChoiceField(choices=create_year(),initial=current_year,widget=forms.Select(attrs={"class": "mt-2 mt-sm-0 mx-sm-1 text-center"}))
