@@ -1,16 +1,19 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block header %}
 {% include 'car_form.html' %}
 {% endblock %}
 
 
 {% block content %}
-<div class="d-flex justify-content-center mt-2 ">
-    <div class="d-flex justify-content-center flex-wrap row">
+<div class="d-flex justify-content-center mt-2">
+    <div class="container d-flex justify-content-around flex-wrap row">
         {% for make in makes %}
-        <div class="p-2 m-1 border col-3">
-            <a href="#" class="text-decoration-none">{{ make.make_display }}</a>
+        <div class="parent d-flex flex-column justify-content-between p-4 border col-4 col-sm-3 col-lg-2  text-center">
+            <div class="d-flex flex-column justify-content-center flex-grow-1">
+                <img class="img-fluid" src="{% static '/search_cars/images/' %}{{ make.make_id}}{{ make.format}}">
+            </div>
+            <a href="#" class="child text-decoration-none">{{ make.make_display }}</a>
         </div>
         {% endfor %}
     </div>

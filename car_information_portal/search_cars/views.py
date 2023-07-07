@@ -21,10 +21,10 @@ def get_car_models(request):
 def index(request):
     if request.method == 'GET':
         form = CarForm()
-        makes_taple_list = get_car_makes()
+        makes_tuple_list = get_car_makes()
         makes = []
-        for make in makes_taple_list:
-            makes.append({"make_display": make[1]})
+        for make in makes_tuple_list:
+            makes.append({"make_id": make[0], "make_display": make[1], "format": ".webp"})
         context = {
             'form': form,
             "makes": makes
