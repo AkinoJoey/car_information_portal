@@ -4,7 +4,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     makerDropdown.addEventListener("change", function () {
         const makeId = makerDropdown.value;
-        console.log(makeId);
         fetchModels(makeId);
     })
 
@@ -14,7 +13,7 @@ document.addEventListener("DOMContentLoaded", function () {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({makeId:makeId}),
+            body: JSON.stringify({ makeId: makeId }),
         })
             .then(response => response.json())
             .then(data => {
@@ -33,4 +32,35 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 })
 
+document.getElementById('carForm').addEventListener('submit'), function (event) {
+    event.preventDefault();
 
+    let formData = new FormData(this);
+
+    fetch(window.location.href, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken') // CSRFトークンをリクエストヘッダーに含める
+        }
+    })
+        .then(response => response.text())
+        .then(data => {
+            console.log(data);
+        })
+};
+
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}

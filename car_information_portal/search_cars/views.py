@@ -29,6 +29,18 @@ def index(request):
             'form': form,
             "makes": makes
         }
+    if request.method == 'POST':
+        form = CarForm(request.POST)
+        context = {"form": form}
+        car_data = get_car_data(request.POST['make'],request.POST['model'],int(request.POST['begin_year']),int(request.POST['end_year']))
+        print(car_data)
+        if form.is_valid():
+            # return JsonResponse({"message": "Success"})
+            print({"message": "Success"})
+        else:
+            errors = form.errors.as_json()
+            return JsonResponse({"errors": errors},status= 400)
+        
     return render(request, 'index.html',context)
 
 def testing(request):

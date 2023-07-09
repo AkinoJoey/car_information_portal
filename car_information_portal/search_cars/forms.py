@@ -11,7 +11,8 @@ def create_year():
 
 def get_car_makes():
     headers = {'User-Agent': 'Chrome/114.0'}
-    response = requests.get('https://www.carqueryapi.com/api/0.3/?callback=?&cmd=getMakes&sold_in_us=*',headers=headers)
+    url = 'https://www.carqueryapi.com/api/0.3/?callback=?&cmd=getMakes&sold_in_us=*'
+    response = requests.get(url=url,headers=headers)
     # うまくjson化できないので、文字列にしてから抽出する
     res_str = response.text
     start_index = res_str.find('{')
@@ -30,6 +31,25 @@ def create_car_models(makeId):
     response = requests.get(url=url,headers=headers)
     models = response.json()['Models']
     return models
+
+def get_car_data(make,model,begin_year,end_year):
+    headers = {'User-Agent': 'Chrome/114.0'}
+    url = f'https://www.carqueryapi.com/api/0.3/?callback=?&cmd=getTrims&model_make_id={make}&model={model}'
+    response = requests.get(url=url,headers=headers)
+    json_data = convert_text_json(response.text)
+    all_data = json_data['Trims']
+    res = []
+    for data in all_data:
+        model_year = int(data['model_year'])
+        if model_year >= begin_year and model_year <= end_year:
+            res.append((data['model_year'], data['model_name'], data['model_engine_power_ps'],data['model_engine_cc']))
+    return res
+
+def convert_text_json(text):
+    start_index = text.find('{')
+    end_index = text.rfind('}')
+    json_data = json.loads(text[start_index:end_index+1])
+    return json_data
 
 class CarForm(forms.Form):
     make = forms.ChoiceField(choices=get_car_makes(),initial=get_car_makes()[0][0],widget=forms.Select(attrs={"id": "make","class": "mt-2 mt-sm-0 mx-sm-1 text-center"}))
