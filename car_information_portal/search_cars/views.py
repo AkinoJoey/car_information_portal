@@ -1,13 +1,7 @@
 from django.shortcuts import render
-from django.http import HttpResponse,HttpResponseRedirect
 from .forms import CarForm
-from django.core.mail import send_mail
-import requests
 from django.http import JsonResponse
-from django import forms
 from .forms import *
-
-from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
 
@@ -24,29 +18,44 @@ def index(request):
         makes_tuple_list = get_car_makes()
         makes = []
         for make in makes_tuple_list:
-            makes.append({"make_id": make[0], "make_display": make[1], "format": ".webp"})
+            make_id = make[0]
+            make_display = make[1]
+            makes.append({"make_id": make_id, "make_display": make_display, "format": ".webp"})
         context = {
+            'request':request.method,
             'form': form,
             "makes": makes
         }
     if request.method == 'POST':
         form = CarForm(request.POST)
-        context = {"form": form}
-        car_data = get_car_data(request.POST['make'],request.POST['model'],int(request.POST['begin_year']),int(request.POST['end_year']))
-        print(car_data)
+        make = request.POST['make']
+        model_name = request.POST['model']
+        car_data = get_car_data(make,model_name,int(request.POST['begin_year']),int(request.POST['end_year']))
+        models = []
+        for data in car_data:
+            model_year = data[1]
+            model_engine_power_ps = data[2]
+            model_engine_cc = data[3]
+            models.append({"model_year":model_year,"model_engine_power_ps":model_engine_power_ps,"model_engine_cc":model_engine_cc})
+        
         if form.is_valid():
-            # return JsonResponse({"message": "Success"})
             print({"message": "Success"})
         else:
             errors = form.errors.as_json()
             return JsonResponse({"errors": errors},status= 400)
         
+        context = {
+            "request": request.method,
+            "form": form,
+            "make":make,
+            "model_name":model_name,
+            "models":models
+        }
+        
     return render(request, 'index.html',context)
 
 def testing(request):
     return render(request, 'base.html')
-
-
     
 def car_form(request):
     if request.method == 'GET':
@@ -55,13 +64,3 @@ def car_form(request):
             'form': form
         }
         return render(request, 'car_form.html', context)
-    
-
-
-
-# def car_form(request):
-#     form = CarForm()
-#     context = {
-#         'form': form
-#     }
-#     return render(request, 'car_form.html', context)

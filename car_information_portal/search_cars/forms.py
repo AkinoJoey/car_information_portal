@@ -42,7 +42,7 @@ def get_car_data(make,model,begin_year,end_year):
     for data in all_data:
         model_year = int(data['model_year'])
         if model_year >= begin_year and model_year <= end_year:
-            res.append((data['model_year'], data['model_name'], data['model_engine_power_ps'],data['model_engine_cc']))
+            res.append((data['model_name'],data['model_year'],data['model_engine_power_ps'],data['model_engine_cc']))
     return res
 
 def convert_text_json(text):

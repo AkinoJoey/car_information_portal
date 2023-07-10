@@ -6,7 +6,9 @@
 
 
 {% block content %}
-<div class="d-flex justify-content-center mt-2">
+
+{% if request == "GET" %}
+<div class="d-flex justify-content-center mt-3">
     <div class="container d-flex justify-content-around flex-wrap row">
         {% for make in makes %}
         <div class="parent d-flex flex-column justify-content-between p-4 border col-4 col-sm-3 col-lg-2  text-center">
@@ -19,5 +21,35 @@
         {% endfor %}
     </div>
 </div>
+
+{% elif request == "POST" %}
+<div class="container mt-3">
+    <table class="table table-bordered">
+        <thead>
+            <tr class="text-center">
+                <th>Make</th>
+                <th>Model</th>
+                <th>Year</th>
+                <th>Max Engine Power(ps)</th>
+                <th>Model Engine(cc)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for model in models %}
+            <tr class="text-center">
+                <td>{{ make }}</td>
+                <td>{{ model_name }}</td>
+                <td>{{ model.model_year }}</td>
+                <td>{{ model.model_engine_power_ps }}</td>
+                <td>{{ model.model_engine_cc}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endif %}
+    
+
 
 {% endblock%}
