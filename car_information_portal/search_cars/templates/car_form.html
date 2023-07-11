@@ -2,13 +2,14 @@
 
 {% block header %}
 <header>
-    <h1 class="text-center">GERMAN CAR WAREHOUSE</h1>
+    <h1 class="text-center"><a class="text-dark text-decoration-none" href="{% url 'index' %}">GERMAN CAR WAREHOUSE</a></h1>
     <form id="carForm" class="container d-flex justify-content-center pt-2 flex-column flex-sm-row " method="post">
         {% csrf_token %}
         {{ form.make }}
-        <select class="mt-2 mt-sm-0 mx-sm-1 text-center" id="model" , name="model" required>
+        <!-- <select class="mt-2 mt-sm-0 mx-sm-1 text-center" id="model" , name="model" required>
             <option label="-- Select Model --"></option>
-        </select>
+        </select> -->
+        {{ form.model}}
         {{ form.begin_year}}
         {{ form.end_year}}
         <button class="btn btn-primary mt-2 mt-sm-0 mx-sm-1" type="submit">Submit</button>

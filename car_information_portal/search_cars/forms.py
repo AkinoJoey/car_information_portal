@@ -32,27 +32,54 @@ def create_car_models(makeId):
     models = response.json()['Models']
     return models
 
+def get_car_models_choices(makeId):
+    headers = {'User-Agent': 'Chrome/114.0'}
+    url = f'https://www.carqueryapi.com/api/0.3/?cmd=getModels&make={makeId}'
+    response = requests.get(url=url,headers=headers)
+    models = response.json()['Models']
+    choices = []
+    choices.append(("-- Select Model --,","-- Select Model --"))
+    for model in models:
+        choices.append((model['model_name'],model['model_name']))
+    return choices
+
 def get_car_data(make,model,begin_year,end_year):
     headers = {'User-Agent': 'Chrome/114.0'}
     url = f'https://www.carqueryapi.com/api/0.3/?callback=?&cmd=getTrims&model_make_id={make}&model={model}'
+    print("this is url")
+    print(url)
     response = requests.get(url=url,headers=headers)
-    json_data = convert_text_json(response.text)
+    json_data = convert_text_to_json(response.text)
     all_data = json_data['Trims']
     res = []
     for data in all_data:
         model_year = int(data['model_year'])
         if model_year >= begin_year and model_year <= end_year:
             res.append((data['model_name'],data['model_year'],data['model_engine_power_ps'],data['model_engine_cc']))
+    print(res)
     return res
 
-def convert_text_json(text):
+def convert_text_to_json(text):
     start_index = text.find('{')
     end_index = text.rfind('}')
     json_data = json.loads(text[start_index:end_index+1])
     return json_data
 
 class CarForm(forms.Form):
-    make = forms.ChoiceField(choices=get_car_makes(),initial=get_car_makes()[0][0],widget=forms.Select(attrs={"id": "make","class": "mt-2 mt-sm-0 mx-sm-1 text-center"}))
+    make = forms.ChoiceField(choices=get_car_makes(),
+                                initial=get_car_makes()[0][0],
+                                widget=forms.Select(attrs={"id": "make","class": "mt-2 mt-sm-0 mx-sm-1 text-center"}))
+    
+    
+    model = forms.ChoiceField(choices=get_car_models_choices(make.initial),
+                                widget=forms.Select(attrs={"id": "model","class": "mt-2 mt-sm-0 mx-sm-1 text-center"}))
+    
     current_year = date.today().year
-    begin_year = forms.ChoiceField(choices=create_year(),initial=current_year,widget=forms.Select(attrs={"class": "mt-2 mt-sm-0 mx-sm-1 text-center"}))
-    end_year = forms.ChoiceField(choices=create_year(),initial=current_year,widget=forms.Select(attrs={"class": "mt-2 mt-sm-0 mx-sm-1 text-center"}))
+    
+    begin_year = forms.ChoiceField(choices=create_year(),
+                                    initial=current_year,
+                                    widget=forms.Select(attrs={"class": "mt-2 mt-sm-0 mx-sm-1 text-center"}))
+    
+    end_year = forms.ChoiceField(choices=create_year(),
+                                    initial=current_year,
+                                    widget=forms.Select(attrs={"class": "mt-2 mt-sm-0 mx-sm-1 text-center"}))

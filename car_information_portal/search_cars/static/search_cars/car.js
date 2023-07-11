@@ -1,3 +1,4 @@
+// 非同期でモデルリストを取得する
 document.addEventListener("DOMContentLoaded", function () {
     const makerDropdown = document.getElementById("make");
     const modelDropdown = document.getElementById("model");
@@ -32,6 +33,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 })
 
+// submitボタンを押した後、ページ遷移せずにモデルのデータを表示する
 document.getElementById('carForm').addEventListener('submit'), function (event) {
     event.preventDefault();
 
