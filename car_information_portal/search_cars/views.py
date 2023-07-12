@@ -27,10 +27,11 @@ def index(request):
             "makes": makes
         }
     if request.method == 'POST':
-        form = CarForm(request.POST)
         make = request.POST['make']
         original_model_name = request.POST['model']
         model_name = original_model_name.replace(" ", "%20")
+        form = CarForm(request.POST)
+        print(request.POST)
         print("make is " + make)
         print("original model name is " + original_model_name)
         print("model name is " + model_name)

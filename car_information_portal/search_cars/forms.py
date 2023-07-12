@@ -56,7 +56,6 @@ def get_car_data(make,model,begin_year,end_year):
         model_year = int(data['model_year'])
         if model_year >= begin_year and model_year <= end_year:
             res.append((data['model_name'],data['model_year'],data['model_engine_power_ps'],data['model_engine_cc']))
-    print(res)
     return res
 
 def convert_text_to_json(text):
@@ -66,20 +65,24 @@ def convert_text_to_json(text):
     return json_data
 
 class CarForm(forms.Form):
-    make = forms.ChoiceField(choices=get_car_makes(),
-                                initial=get_car_makes()[0][0],
+    makes_choices = get_car_makes()
+    selected_make = makes_choices[0][0]
+    make = forms.ChoiceField(choices=makes_choices,
+                                initial=selected_make,
                                 widget=forms.Select(attrs={"id": "make","class": "mt-2 mt-sm-0 mx-sm-1 text-center"}))
     
     
-    model = forms.ChoiceField(choices=get_car_models_choices(make.initial),
+    model_choices = get_car_models_choices()
+    model = forms.ChoiceField(choices=model_choices,
                                 widget=forms.Select(attrs={"id": "model","class": "mt-2 mt-sm-0 mx-sm-1 text-center"}))
     
-    current_year = date.today().year
     
-    begin_year = forms.ChoiceField(choices=create_year(),
+    current_year = date.today().year
+    begin_year_choices = create_year()
+    begin_year = forms.ChoiceField(choices=begin_year_choices,
                                     initial=current_year,
                                     widget=forms.Select(attrs={"class": "mt-2 mt-sm-0 mx-sm-1 text-center"}))
-    
-    end_year = forms.ChoiceField(choices=create_year(),
+    end_year_choices = create_year()
+    end_year = forms.ChoiceField(choices=end_year_choices,
                                     initial=current_year,
                                     widget=forms.Select(attrs={"class": "mt-2 mt-sm-0 mx-sm-1 text-center"}))
