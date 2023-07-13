@@ -34,7 +34,8 @@ document.addEventListener("DOMContentLoaded", function () {
 })
 
 // submitボタンを押した後、ページ遷移せずにモデルのデータを表示する
-document.getElementById('carForm').addEventListener('submit'), function (event) {
+// test
+document.getElementById('carForm').addEventListener('submit', () => function (event) {
     event.preventDefault();
 
     let formData = new FormData(this);
@@ -50,7 +51,7 @@ document.getElementById('carForm').addEventListener('submit'), function (event) 
         .then(data => {
             console.log(data);
         })
-};
+});
 
 function getCookie(name) {
     var cookieValue = null;

@@ -27,17 +27,17 @@ def index(request):
             "makes": makes
         }
     if request.method == 'POST':
-        make = request.POST['make']
-        original_model_name = request.POST['model']
-        model_name = original_model_name.replace(" ", "%20")
         form = CarForm(request.POST)
-        print(request.POST)
-        print("make is " + make)
-        print("original model name is " + original_model_name)
-        print("model name is " + model_name)
+        if form.is_valid():
+            make = form.cleaned_data['make']
+            original_model_name = form.cleaned_data['model']
+            model_name = original_model_name.replace(" ", "%20")
+        else:
+            print(form.errors)
+            
         car_data = get_car_data(make,model_name,int(request.POST['begin_year']),int(request.POST['end_year']))
-        models = []
         
+        models = []
         for data in car_data:
             model_year = data[1]
             model_engine_power_ps = data[2]

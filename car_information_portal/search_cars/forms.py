@@ -1,4 +1,6 @@
+from typing import Any, Mapping, Optional, Type, Union
 from django import forms
+from django.forms.utils import ErrorList
 import requests
 from datetime import date
 import json
@@ -64,21 +66,17 @@ def convert_text_to_json(text):
     json_data = json.loads(text[start_index:end_index+1])
     return json_data
 
-class CarForm(forms.Form):
+class CarForm(forms.Form):   
     makes_choices = get_car_makes()
-    selected_make = makes_choices[0][0]
     make = forms.ChoiceField(choices=makes_choices,
-                                initial=selected_make,
+                                initial=makes_choices[0][0],
                                 widget=forms.Select(attrs={"id": "make","class": "mt-2 mt-sm-0 mx-sm-1 text-center"}))
     
-    
-    model_choices = get_car_models_choices()
-    model = forms.ChoiceField(choices=model_choices,
-                                widget=forms.Select(attrs={"id": "model","class": "mt-2 mt-sm-0 mx-sm-1 text-center"}))
-    
+    model = forms.ChoiceField(widget=forms.Select(attrs={"id": "model","class": "mt-2 mt-sm-0 mx-sm-1 text-center"}))
     
     current_year = date.today().year
     begin_year_choices = create_year()
+    
     begin_year = forms.ChoiceField(choices=begin_year_choices,
                                     initial=current_year,
                                     widget=forms.Select(attrs={"class": "mt-2 mt-sm-0 mx-sm-1 text-center"}))
@@ -86,3 +84,19 @@ class CarForm(forms.Form):
     end_year = forms.ChoiceField(choices=end_year_choices,
                                     initial=current_year,
                                     widget=forms.Select(attrs={"class": "mt-2 mt-sm-0 mx-sm-1 text-center"}))
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.is_bound and 'make' in self.data:
+            print(self.data)
+            make_value = self.data['make']
+        else:
+            make_value = self.fields['make'].initial
+            print(self.data)
+        self.fields['model'].choices = self.get_model_choices(make_value)
+        
+    def get_model_choices(self,make):
+        # make = self.data.get('make')
+        return get_car_models_choices(make)
+            
+    
