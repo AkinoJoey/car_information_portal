@@ -66,7 +66,8 @@ def car_form(request):
         return render(request, 'car_form.html', context)
     
 def model_list(request,make_name):
-    form = CarForm()
+    print(request)
+    form = CarForm({"make": make_name})
     context = {
             'form': form
         }

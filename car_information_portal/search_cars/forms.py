@@ -88,11 +88,12 @@ class CarForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if self.is_bound and 'make' in self.data:
-            print(self.data)
             make_value = self.data['make']
+            self.fields['make'].initial = make_value
+            print(self.fields['make'].initial)
+            
         else:
             make_value = self.fields['make'].initial
-            print(self.data)
         self.fields['model'].choices = self.get_model_choices(make_value)
         
     def get_model_choices(self,make):
