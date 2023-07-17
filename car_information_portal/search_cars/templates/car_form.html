@@ -6,9 +6,6 @@
     <form id="carForm" class="container d-flex justify-content-center pt-2 flex-column flex-sm-row " method="post">
         {% csrf_token %}
         {{ form.make }}
-        <!-- <select class="mt-2 mt-sm-0 mx-sm-1 text-center" id="model" , name="model" required>
-            <option label="-- Select Model --"></option>
-        </select> -->
         {{ form.model}}
         {{ form.begin_year}}
         {{ form.end_year}}

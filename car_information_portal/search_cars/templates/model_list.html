@@ -3,3 +3,17 @@
 {% block header %}
 {% include 'car_form.html' %}
 {% endblock %}
+
+
+{% block content %}
+<img class="img-fluid" src="{% static '/search_cars/images/' %}{{ make_id }}{{ format }}">
+<h2>{{ make_display }} Models {{ current_year }}</h2>
+
+<ul>
+    {% for model in models %}
+    <li>{{ model }}</li>
+    {% endfor %}
+</ul>
+
+
+{% endblock %}

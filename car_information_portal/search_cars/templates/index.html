@@ -13,7 +13,7 @@
     <div class="container d-flex justify-content-around flex-wrap row">
         {% for make in makes %}
         <div class="parent d-flex flex-column justify-content-between p-4 border col-4 col-sm-3 col-lg-2  text-center">
-            <a href="{% url 'model-list' make.make_display %}" class="child text-decoration-none">{{ make.make_display}}</a>
+            <a href="{% url 'model-list' make=make.make_id %}" class="child text-decoration-none">{{ make.make_display}}</a>
             <div class="d-flex flex-column justify-content-center flex-grow-1 ">
                 <img class="img-fluid" src="{% static '/search_cars/images/' %}{{ make.make_id}}{{ make.format}}">
             </div>

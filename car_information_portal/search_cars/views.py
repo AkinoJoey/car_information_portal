@@ -4,6 +4,7 @@ from django.http import JsonResponse
 from .forms import *
 from django.views.decorators.csrf import csrf_exempt
 import json
+from datetime import date
 
 @csrf_exempt
 def get_car_models(request):
@@ -28,6 +29,7 @@ def index(request):
         }
     if request.method == 'POST':
         form = CarForm(request.POST)
+        form.set_model_choices(request.POST.get('make'))
         if form.is_valid():
             make = form.cleaned_data['make']
             original_model_name = form.cleaned_data['model']
@@ -65,10 +67,19 @@ def car_form(request):
         }
         return render(request, 'car_form.html', context)
     
-def model_list(request,make_name):
-    print(request)
-    form = CarForm({"make": make_name})
+def model_list(request,make):
+    form = CarForm(initial={"make":make})
+    form.set_model_choices(make)
+    make_display =  form.get_make_display(make)
+    current_year = date.today().year
+    # 2023のモデルリストがないからとりあえず2021にしておく
+    models = create_car_models_by_year(make,2021)
     context = {
-            'form': form
+            'form': form,
+            'make_id': make,
+            'make_display': make_display,
+            "format": ".webp",
+            'current_year': current_year,
+            'models':models
         }
     return render(request, 'model_list.html',context)

@@ -48,8 +48,6 @@ def get_car_models_choices(makeId):
 def get_car_data(make,model,begin_year,end_year):
     headers = {'User-Agent': 'Chrome/114.0'}
     url = f'https://www.carqueryapi.com/api/0.3/?callback=?&cmd=getTrims&model_make_id={make}&model={model}'
-    print("this is url")
-    print(url)
     response = requests.get(url=url,headers=headers)
     json_data = convert_text_to_json(response.text)
     all_data = json_data['Trims']
@@ -60,6 +58,22 @@ def get_car_data(make,model,begin_year,end_year):
             res.append((data['model_name'],data['model_year'],data['model_engine_power_ps'],data['model_engine_cc']))
     return res
 
+def create_car_models_by_year(make_id,year):
+    headers = {'User-Agent': 'Chrome/114.0'}
+    url = f"https://www.carqueryapi.com/api/0.3/?callback=?&cmd=getTrims&make={make_id}&year={year}"
+    response = requests.get(url=url,headers=headers)
+    # うまくjson化できないので、文字列にしてから抽出する
+    res_str = response.text
+    start_index = res_str.find('{')
+    end_index = res_str.rfind('}')
+    json_data = json.loads(res_str[start_index:end_index+1])
+    all_data = json_data['Trims']
+    dict = {}
+    for data in all_data:
+        model = data['model_name']
+        dict.setdefault(model,model)
+    return list(dict.keys())
+
 def convert_text_to_json(text):
     start_index = text.find('{')
     end_index = text.rfind('}')
@@ -69,7 +83,6 @@ def convert_text_to_json(text):
 class CarForm(forms.Form):   
     makes_choices = get_car_makes()
     make = forms.ChoiceField(choices=makes_choices,
-                                initial=makes_choices[0][0],
                                 widget=forms.Select(attrs={"id": "make","class": "mt-2 mt-sm-0 mx-sm-1 text-center"}))
     
     model = forms.ChoiceField(widget=forms.Select(attrs={"id": "model","class": "mt-2 mt-sm-0 mx-sm-1 text-center"}))
@@ -78,26 +91,22 @@ class CarForm(forms.Form):
     begin_year_choices = create_year()
     
     begin_year = forms.ChoiceField(choices=begin_year_choices,
-                                    initial=current_year,
                                     widget=forms.Select(attrs={"class": "mt-2 mt-sm-0 mx-sm-1 text-center"}))
     end_year_choices = create_year()
     end_year = forms.ChoiceField(choices=end_year_choices,
-                                    initial=current_year,
                                     widget=forms.Select(attrs={"class": "mt-2 mt-sm-0 mx-sm-1 text-center"}))
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        if self.is_bound and 'make' in self.data:
-            make_value = self.data['make']
-            self.fields['make'].initial = make_value
-            print(self.fields['make'].initial)
-            
-        else:
-            make_value = self.fields['make'].initial
-        self.fields['model'].choices = self.get_model_choices(make_value)
+        self.fields['make'].initial = self.makes_choices[0][0]
+        self.fields['model'].initial = self.set_model_choices(self.fields['make'].initial)
+        self.fields['begin_year'].initial = self.current_year
+        self.fields['end_year'].initial = self.current_year
         
-    def get_model_choices(self,make):
-        # make = self.data.get('make')
-        return get_car_models_choices(make)
-            
-    
+    def set_model_choices(self,make_id):
+        self.fields['model'].choices = get_car_models_choices(make_id)
+
+    def get_make_display(self,make_id):
+        for choice in self.makes_choices:
+                if choice[0] == make_id:
+                    return choice[1]
