@@ -1,0 +1,24 @@
+<div class="container mt-3">
+    <table class="table table-bordered">
+        <thead>
+            <tr class="text-center">
+                <th>Make</th>
+                <th>Model</th>
+                <th>Year</th>
+                <th>Max Engine Power(ps)</th>
+                <th>Model Engine(cc)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for model in models %}
+            <tr class="text-center">
+                <td>{{ make }}</td>
+                <td>{{ model_name }}</td>
+                <td>{{ model.model_year }}</td>
+                <td>{{ model.model_engine_power_ps }}</td>
+                <td>{{ model.model_engine_cc}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

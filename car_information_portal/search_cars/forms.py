@@ -17,9 +17,7 @@ def get_car_makes():
     response = requests.get(url=url,headers=headers)
     # うまくjson化できないので、文字列にしてから抽出する
     res_str = response.text
-    start_index = res_str.find('{')
-    end_index = res_str.rfind('}')
-    json_data = json.loads(res_str[start_index:end_index+1])
+    json_data = convert_text_to_json(res_str)
     makes = json_data['Makes']
     choices = []
     for make in makes:
@@ -64,9 +62,7 @@ def create_car_models_by_year(make_id,year):
     response = requests.get(url=url,headers=headers)
     # うまくjson化できないので、文字列にしてから抽出する
     res_str = response.text
-    start_index = res_str.find('{')
-    end_index = res_str.rfind('}')
-    json_data = json.loads(res_str[start_index:end_index+1])
+    json_data = convert_text_to_json(res_str)
     all_data = json_data['Trims']
     dict = {}
     for data in all_data:
@@ -74,12 +70,32 @@ def create_car_models_by_year(make_id,year):
         dict.setdefault(model,model)
     return list(dict.keys())
 
+def get_min_year():
+    headers = {'User-Agent': 'Chrome/114.0'}
+    url = 'https://www.carqueryapi.com/api/0.3/?callback=?&cmd=getYears'
+    response = requests.get(url=url,headers=headers)
+    res_str = response.text
+    json_data = convert_text_to_json(res_str)
+    years = json_data['Years']
+    
+    return years['min_year']
+
+def get_max_year():
+    headers = {'User-Agent': 'Chrome/114.0'}
+    url = 'https://www.carqueryapi.com/api/0.3/?callback=?&cmd=getYears'
+    response = requests.get(url=url,headers=headers)
+    res_str = response.text
+    json_data = convert_text_to_json(res_str)
+    years = json_data['Years']
+    
+    return years['max_year']
+
 def convert_text_to_json(text):
     start_index = text.find('{')
     end_index = text.rfind('}')
     json_data = json.loads(text[start_index:end_index+1])
     return json_data
-
+    
 class CarForm(forms.Form):   
     makes_choices = get_car_makes()
     make = forms.ChoiceField(choices=makes_choices,
@@ -102,9 +118,13 @@ class CarForm(forms.Form):
         self.fields['model'].initial = self.set_model_choices(self.fields['make'].initial)
         self.fields['begin_year'].initial = self.current_year
         self.fields['end_year'].initial = self.current_year
+    
         
     def set_model_choices(self,make_id):
         self.fields['model'].choices = get_car_models_choices(make_id)
+        
+    def set_model_initial(self,model):
+        self.fields['model'].initial = model
 
     def get_make_display(self,make_id):
         for choice in self.makes_choices:

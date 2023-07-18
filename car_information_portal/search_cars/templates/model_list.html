@@ -6,14 +6,27 @@
 
 
 {% block content %}
-<img class="img-fluid" src="{% static '/search_cars/images/' %}{{ make_id }}{{ format }}">
-<h2>{{ make_display }} Models {{ current_year }}</h2>
 
-<ul>
-    {% for model in models %}
-    <li>{{ model }}</li>
-    {% endfor %}
-</ul>
 
+{% if request  == "GET" %}
+    
+<div class="d-flex flex-column align-items-center container mt-3">
+    <div class="d-flex justify-content-center">
+        <img class="img-fluid w-25" src="{% static '/search_cars/images/' %}{{ make_id }}{{ format }}">
+    </div>
+    <h2 class="mt-2 text-center">{{ make_display }} Models {{ current_year }}</h2>
+    
+    <ul class="list-unstyled text-center mt-2">
+        {% for model in models %}
+        <li class="fs-5"><a class="text-decoration-none" href="{% url 'model-data-list' make=make_id model=model %}" >{{ model }}</a></li>
+        {% endfor %}
+    </ul>
+</div>
+
+{% elif request == "POST" %}
+
+{% include 'post.html' %}
+
+{% endif %}
 
 {% endblock %}

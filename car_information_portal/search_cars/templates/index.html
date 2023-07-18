@@ -4,8 +4,6 @@
 {% include 'car_form.html' %}
 {% endblock %}
 
-{% url 'model-list' %}
-
 {% block content %}
 
 {% if request == "GET" %}
@@ -17,40 +15,15 @@
             <div class="d-flex flex-column justify-content-center flex-grow-1 ">
                 <img class="img-fluid" src="{% static '/search_cars/images/' %}{{ make.make_id}}{{ make.format}}">
             </div>
-                
         </div>
         {% endfor %}
     </div>
 </div>
 
 {% elif request == "POST" %}
-<div class="container mt-3">
-    <table class="table table-bordered">
-        <thead>
-            <tr class="text-center">
-                <th>Make</th>
-                <th>Model</th>
-                <th>Year</th>
-                <th>Max Engine Power(ps)</th>
-                <th>Model Engine(cc)</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for model in models %}
-            <tr class="text-center">
-                <td>{{ make }}</td>
-                <td>{{ model_name }}</td>
-                <td>{{ model.model_year }}</td>
-                <td>{{ model.model_engine_power_ps }}</td>
-                <td>{{ model.model_engine_cc}}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
+
+{% include 'post.html' %}
 
 {% endif %}
-    
-
 
 {% endblock%}
