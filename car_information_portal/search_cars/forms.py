@@ -1,6 +1,4 @@
-from typing import Any, Mapping, Optional, Type, Union
 from django import forms
-from django.forms.utils import ErrorList
 import requests
 from datetime import date
 import json
@@ -38,14 +36,14 @@ def get_car_models_choices(makeId):
     response = requests.get(url=url,headers=headers)
     models = response.json()['Models']
     choices = []
-    choices.append(("-- Select Model --,","-- Select Model --"))
+    choices.append(('', '----'))
     for model in models:
         choices.append((model['model_name'],model['model_name']))
     return choices
 
-def get_car_data(make,model,begin_year,end_year):
+def get_car_data(make_id,model,begin_year,end_year):
     headers = {'User-Agent': 'Chrome/114.0'}
-    url = f'https://www.carqueryapi.com/api/0.3/?callback=?&cmd=getTrims&model_make_id={make}&model={model}'
+    url = f'https://www.carqueryapi.com/api/0.3/?callback=?&cmd=getTrims&model_make_id={make_id}&model={model}'
     response = requests.get(url=url,headers=headers)
     json_data = convert_text_to_json(response.text)
     all_data = json_data['Trims']
@@ -99,6 +97,7 @@ def convert_text_to_json(text):
 class CarForm(forms.Form):   
     makes_choices = get_car_makes()
     make = forms.ChoiceField(choices=makes_choices,
+                                required=True,
                                 widget=forms.Select(attrs={"id": "make","class": "mt-2 mt-sm-0 mx-sm-1 text-center"}))
     
     model = forms.ChoiceField(widget=forms.Select(attrs={"id": "model","class": "mt-2 mt-sm-0 mx-sm-1 text-center"}))
